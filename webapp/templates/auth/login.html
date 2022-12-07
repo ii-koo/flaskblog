@@ -32,7 +32,10 @@
                     {{ form.password( class="form-control") }}
                 {% endif %}
             </div>
-            <br>
+            <div class="form-check mb-3">
+                {{ form.remember( class="form-check-input") }}
+                {{ form.remember.label( class="form-control-label") }}
+            </div>
             <div class="d-grid gap-2">
                 {{ form.submit( class="btn btn-success") }}
             </div>
