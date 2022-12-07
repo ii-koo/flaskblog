@@ -1,0 +1,10 @@
+{% extends "layouts/base.html" %}
+{% block content %}
+<div class="row">
+    {% for post in posts %}
+        <h1>{{ post.title }}</h1>
+        <p>By {{ post.author}} on {{ post.date_posted }}</p>
+        <p>{{ post.content }}</p>
+    {% endfor %}
+</div>
+{% endblock content %}
