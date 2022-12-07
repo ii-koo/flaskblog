@@ -10,3 +10,4 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///blog.db'
 db = SQLAlchemy(app)
 
 from webapp.routes import route
+from webapp.routes import auth
