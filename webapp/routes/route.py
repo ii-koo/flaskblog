@@ -1,4 +1,5 @@
 from flask import render_template
+from flask_login import login_required
 from webapp import app
 
 posts = [
@@ -24,3 +25,9 @@ def index():
 @app.route('/about')
 def about():
     return render_template('pages/about.html', title='About')
+
+
+@app.route('/account')
+@login_required
+def account():
+    return render_template('pages/account/account.html', title='Account')
