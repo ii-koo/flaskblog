@@ -10,6 +10,8 @@ app.app_context().push()
 
 app.config['SECRET_KEY'] = secrets.token_hex(16)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///blog.db'
+# app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root@localhost/flask_db_blog'
+
 
 fa = FontAwesome(app)
 db = SQLAlchemy(app)

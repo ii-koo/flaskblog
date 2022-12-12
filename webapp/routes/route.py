@@ -1,6 +1,7 @@
 from flask import render_template, url_for, redirect, flash, request
 from flask_login import login_required, current_user
-from webapp.forms.form import UpdateAccountForm
+from webapp.forms.form import UpdateAccountForm, PostForm
+from webapp.models.model import Post
 from webapp import app, db
 from PIL import Image
 import secrets
@@ -23,6 +24,7 @@ posts = [
 
 @app.route('/')
 def index():
+    posts = Post.query.all()
     return render_template('pages/index.html', title='Home', posts=posts)
 
 
@@ -63,3 +65,16 @@ def account():
         form.email.data = current_user.email
     image_file = url_for('static', filename='img/profile/' + current_user.image_file)
     return render_template('pages/account/account.html', title='Account', image_file=image_file, form=form)
+
+
+@app.route('/post/new', methods=['GET', 'POST'])
+@login_required
+def newPost():
+    form = PostForm()
+    if form.validate_on_submit():
+        post = Post(viewed=1, title=form.title.data, content=form.content.data, author=current_user)
+        db.session.add(post)
+        db.session.commit()
+        flash(f'Your post "{form.title.data}" has been created!', "success")
+        return redirect(url_for('index'))
+    return render_template('pages/posts/newPost.html', title='New Post', form=form)
