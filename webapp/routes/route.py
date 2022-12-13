@@ -1,30 +1,17 @@
 from flask import render_template, url_for, redirect, flash, request, abort
 from flask_login import login_required, current_user
 from webapp.forms.form import UpdateAccountForm, PostForm
-from webapp.models.model import Post
+from webapp.models.model import Post, User
 from webapp import app, db
 from PIL import Image
 import secrets
 import os
 
-posts = [
-    {
-        'title': 'First Post',
-        'author': 'Moderator',
-        'content': 'i made a first post',
-        'date_posted': 'April 03, 2021'
-    }, {
-        'title': 'Second Post',
-        'author': 'User',
-        'content': 'i made a second post',
-        'date_posted': 'April 04, 2021'
-    }
-]
-
 
 @app.route('/')
 def index():
-    posts = Post.query.all()
+    page = request.args.get('page', 1, type=int)
+    posts = Post.query.order_by(Post.date_created.desc()).paginate(page=page, per_page=5)
     return render_template('pages/index.html', title='Home', posts=posts)
 
 
@@ -117,4 +104,14 @@ def deletePost(post_id):
     db.session.commit()
     flash(f'Your post "{post.title}" has been deleted!', "success")
     return redirect(url_for('index'))
+
+
+@app.route('/user/<string:username>')
+def userPosts(username):
+    page = request.args.get('page', 1, type=int)
+    user = User.query.filter_by(username=username).first_or_404()
+    posts = Post.query.filter_by(author=user).\
+        order_by(Post.date_created.desc()).\
+        paginate(page=page, per_page=5)
+    return render_template('pages/index.html', title='Home', posts=posts)
 
