@@ -1,5 +1,6 @@
-from webapp import db, login_manager
+from webapp import db, app, login_manager
 from flask_login import UserMixin
+from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 import datetime
 
 
@@ -16,6 +17,25 @@ class User(db.Model, UserMixin):
     password = db.Column(db.String(255), nullable=False)
     date_created = db.Column(db.DateTime, nullable=False, default=datetime.datetime.utcnow)
     posts = db.relationship('Post', backref='author', lazy=True)
+
+    def get_reset_token(self, expires_sec=300):
+        s = Serializer(app.config(['SECRET_KEY']), expires_sec)
+        return s.dumps({'user.id': self.id}).decode('utf-8')
+
+    """
+    ketika metode ini dipanggil, kita tidak meneruskan instance kelas ke metode tersebut 
+    (seperti yang biasa kita lakukan dengan metode). Ini berarti kita dapat meletakkan 
+    fungsi di dalam kelas tetapi tidak dapat mengakses instance dari kelas tersebut 
+    (ini berguna saat metode Anda tidak menggunakan instance).
+    """
+    @staticmethod
+    def verify_reset_token(token):
+        s = Serializer(app.config['SECRET_KEY'])
+        try:
+            user_id = s.loads(token)['user_id']
+        except:
+            return None
+        return User.query.get(user_id)
 
 
 class Post(db.Model):

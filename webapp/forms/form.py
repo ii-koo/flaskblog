@@ -10,7 +10,7 @@ class RegisterForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired(), Length(min=3, max=12)])
     email = EmailField('Email', validators=[DataRequired(), Email()])
     password = PasswordField('Password', validators=[DataRequired(), Length(min=3, max=12)])
-    confirm_password = PasswordField('Password', validators=[DataRequired(), Length(min=3, max=12), EqualTo('password')])
+    confirm_password = PasswordField('Confirm Password', validators=[DataRequired(), Length(min=3, max=12), EqualTo('password')])
     submit = SubmitField('Sign Up')
 
     def validate_username(self, username):
@@ -54,3 +54,19 @@ class PostForm(FlaskForm):
     title = StringField('Title', validators=[DataRequired(), Length(min=3, max=64)])
     content = TextAreaField('Content', validators=[DataRequired()])
     submit = SubmitField('Submit')
+
+
+class RequestResetForm(FlaskForm):
+    email = EmailField('Email', validators=[DataRequired(), Email()])
+    submit = SubmitField('Submit')
+
+    def validate_email(self, email):
+        email = User.query.filter_by(email=email.data).first()
+        if email:
+            raise ValidationError('There is no account with that email.')
+
+
+class ResetPasswordForm(FlaskForm):
+    password = PasswordField('New Password', validators=[DataRequired(), Length(min=3, max=12)])
+    confirm_password = PasswordField('Confirm Password', validators=[DataRequired(), Length(min=3, max=12), EqualTo('password')])
+    submit = SubmitField('Reset Password')

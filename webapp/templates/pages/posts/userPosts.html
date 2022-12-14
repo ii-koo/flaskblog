@@ -1,5 +1,6 @@
 {% extends "layouts/base.html" %}
 {% block content %}
+<h3>Post by {{ user.username }} ({{ posts.total }})</h3>
     {% for post in posts %}
         <article class="media content-section">
           <img class="rounded-circle article-img" src="{{ url_for('static', filename='img/profile/' + post.author.image_file) }}">

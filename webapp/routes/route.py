@@ -113,5 +113,5 @@ def userPosts(username):
     posts = Post.query.filter_by(author=user).\
         order_by(Post.date_created.desc()).\
         paginate(page=page, per_page=5)
-    return render_template('pages/index.html', title='Home', posts=posts)
+    return render_template('pages/posts/userPosts.html', title='Home', posts=posts, user=user)
 
