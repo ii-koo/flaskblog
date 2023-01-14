@@ -1,19 +1,25 @@
 <div class="content-section">
     <h3 class="text-center">Popular Post</h3>
     <ul class="list-group">
-        <li class="list-group-item list-group-item-light">A</li>
-        <li class="list-group-item list-group-item-light">B</li>
-        <li class="list-group-item list-group-item-light">C</li>
-        <li class="list-group-item list-group-item-light">D</li>
+        {% for post in popular_posts %}
+            <li class="list-group-item list-group-item-light">
+                <a href="{{ url_for('posts.postDetail', post_id=post.id ) }}" class="text-decoration-none">
+                    {{ post.title }}
+                </a>
+            </li>
+        {% endfor %}
     </ul>
 </div>
 
 <div class="content-section">
     <h3 class="text-center">Latest Post</h3>
     <ul class="list-group">
-        <li class="list-group-item list-group-item-light">1</li>
-        <li class="list-group-item list-group-item-light">2</li>
-        <li class="list-group-item list-group-item-light">3</li>
-        <li class="list-group-item list-group-item-light">4</li>
+        {% for post in latest_posts %}
+            <li class="list-group-item list-group-item-light">
+                <a href="{{ url_for('posts.postDetail', post_id=post.id ) }}" class="text-decoration-none">
+                    {{ post.title }}
+                </a>
+            </li>
+        {% endfor %}
     </ul>
 </div>

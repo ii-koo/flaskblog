@@ -24,15 +24,21 @@ def newPost():
 
 @posts.route('/post/<int:post_id>')
 def postDetail(post_id):
+    latest_posts = Post.query.order_by(Post.date_created.desc())
+    popular_posts = Post.query.order_by(Post.viewed.desc())
+
     post = Post.query.get_or_404(post_id)
     post.viewed = post.viewed + 1
     db.session.commit()
-    return render_template('pages/posts/postDetail.html', title=post.title, post=post)
+    return render_template('pages/posts/postDetail.html', title=post.title, post=post, latest_posts=latest_posts, popular_posts=popular_posts)
 
 
 @posts.route('/post/<int:post_id>/update', methods=['GET', 'POST'])
 @login_required
 def postUpdate(post_id):
+    latest_posts = Post.query.order_by(Post.date_created.desc())
+    popular_posts = Post.query.order_by(Post.viewed.desc())
+
     post = Post.query.get_or_404(post_id)
     if post.author != current_user:
         abort(403)
@@ -46,7 +52,7 @@ def postUpdate(post_id):
     elif request.method == 'GET':
         form.title.data = post.title
         form.content.data = post.content
-    return render_template('pages/posts/postUpdate.html', title='Update '+post.title, form=form)
+    return render_template('pages/posts/postUpdate.html', title='Update '+post.title, form=form, latest_posts=latest_posts, popular_posts=popular_posts)
 
 
 @posts.route('/post/<int:post_id>/delete', methods=['POST'])

@@ -31,9 +31,11 @@
           {% endwith %}
           {% block content %}{% endblock %}
         </div>
+        {% block sidebar %}
         <div class="col-md-4">
           {% include 'components/sidebar.html' %}
         </div>
+        {% endblock sidebar %}
       </div>
   </main>
     <script src="{{ url_for('static', filename='js/bootstrap.bundle.min.js') }}"></script>

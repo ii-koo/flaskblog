@@ -9,9 +9,13 @@ main = Blueprint('main', '__name__')
 def index():
     page = request.args.get('page', 1, type=int)
     posts = Post.query.order_by(Post.date_created.desc()).paginate(page=page, per_page=5)
-    return render_template('pages/index.html', title='Home', posts=posts)
+    latest_posts = Post.query.order_by(Post.date_created.desc())
+    popular_posts = Post.query.order_by(Post.viewed.desc())
+    return render_template('pages/index.html', title='Home', posts=posts, latest_posts=latest_posts, popular_posts=popular_posts)
 
 
 @main.route('/about')
 def about():
-    return render_template('pages/about.html', title='About')
+    latest_posts = Post.query.order_by(Post.date_created.desc())
+    popular_posts = Post.query.order_by(Post.viewed.desc())
+    return render_template('pages/about.html', title='About', latest_posts=latest_posts, popular_posts=popular_posts)
